@@ -1,24 +1,23 @@
-name: Build ext4 Image
+name: Build ext4 Image from Google Drive
 on: push
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Скачиваем уже собранный rootfs.tar.gz из артефактов (если он есть)
-      - uses: actions/download-artifact@v4
-        with:
-          name: rootfs
-          path: ./rootfs
+      - name: Download rootfs.tar.gz from Google Drive
+        run: |
+          FILE_ID="1PbNtIB8LbDpo_CZTVpIjOmiOsyJiK72h"
+          curl -L -o rootfs.tar.gz "https://drive.google.com/uc?export=download&id=${FILE_ID}"
 
-      # Или если rootfs.tar.gz лежит в репозитории — распакуем его
-      - run: |
+      - name: Create ext4 image
+        run: |
           mkdir -p image
           dd if=/dev/zero of=image/arch-rootfs.img bs=1M count=4096
           mkfs.ext4 image/arch-rootfs.img
-          mkdir -p /mnt/rootfs
-          sudo mount image/arch-rootfs.img /mnt/rootfs
-          sudo tar --numeric-owner -xzf ./rootfs/rootfs.tar.gz -C /mnt/rootfs
-          sudo umount /mnt/rootfs
+          mkdir -p /mnt/image
+          sudo mount image/arch-rootfs.img /mnt/image
+          sudo tar --numeric-owner -xzf rootfs.tar.gz -C /mnt/image
+          sudo umount /mnt/image
 
       - uses: actions/upload-artifact@v4
         with:
