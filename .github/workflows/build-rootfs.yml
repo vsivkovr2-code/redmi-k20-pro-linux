@@ -5,13 +5,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          mkdir rootfs
-          docker run --rm -v $PWD/rootfs:/tmp/rootfs archlinux bash -c "
+          mkdir -p rootfs
+          docker run --rm -v $PWD/rootfs:/mnt/rootfs archlinux bash -c "
             pacman -Syu --noconfirm &&
             pacman -S base plasma-mobile mesa networkmanager --noconfirm &&
-            tar --exclude='/sys' --exclude='/proc' --exclude='/dev' --exclude='/run' -czf /tmp/rootfs/rootfs.tar.gz /
+            cp -a / /mnt/rootfs/
           "
+      - run: cd rootfs && tar -czf ../rootfs.tar.gz . && cd ..
       - uses: actions/upload-artifact@v4
         with:
           name: rootfs
-          path: rootfs/rootfs.tar.gz
+          path: rootfs.tar.gz
