@@ -4,11 +4,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: docker run --rm archlinux bash -c "
-          pacman -Syu --noconfirm &&
-          pacman -S base plasma-mobile mesa networkmanager --noconfirm &&
-          tar -czf /rootfs.tar.gz /
-        "
+      - run: |
+          docker run --rm archlinux bash -c "
+            pacman -Syu --noconfirm &&
+            pacman -S base plasma-mobile mesa networkmanager --noconfirm &&
+            tar -czf /rootfs.tar.gz /
+          "
       - uses: actions/upload-artifact@v4
         with:
           name: rootfs
