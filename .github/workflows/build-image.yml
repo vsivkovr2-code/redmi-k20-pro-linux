@@ -7,7 +7,7 @@ jobs:
       - name: Download rootfs.tar.gz from Google Drive
         run: |
           FILE_ID="1PbNtIB8LbDpo_CZTVpIjOmiOsyJiK72h"
-          curl -L -o rootfs.tar.gz "https://drive.google.com/uc?export=download&id=${FILE_ID}"
+          gdown "https://drive.google.com/uc?id=${FILE_ID}" -O rootfs.tar.gz
 
       - name: Create ext4 image
         run: |
