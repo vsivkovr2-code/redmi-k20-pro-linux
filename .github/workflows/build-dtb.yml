@@ -1,0 +1,25 @@
+name: Build DTB from DTS
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Установка Device Tree Compiler
+      - run: sudo apt update && sudo apt install -y device-tree-compiler
+
+      # Создаём папку для готовых dtb
+      - run: mkdir -p dtb_output
+
+      # Компиляция всех dts файлов в папке (укажите путь к вашим dts)
+      - run: |
+          for dts in $(find . -name "*.dts" -not -path "./dtb_output/*"); do
+            echo "Компиляция $dts..."
+            dtc -I dts -O dtb -o dtb_output/$(basename ${dts%.dts}.dtb) $dts
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dtb-files
+          path: dtb_output/*.dtb
