@@ -14,10 +14,10 @@ jobs:
           mkdir -p image
           dd if=/dev/zero of=image/arch-rootfs.img bs=1M count=4096
           mkfs.ext4 image/arch-rootfs.img
-          mkdir -p /mnt/image
-          sudo mount image/arch-rootfs.img /mnt/image
-          sudo tar --numeric-owner -xzf rootfs.tar.gz -C /mnt/image
-          sudo umount /mnt/image
+          mkdir -p /tmp/image_mount
+          sudo mount image/arch-rootfs.img /tmp/image_mount
+          sudo tar --numeric-owner -xzf rootfs.tar.gz -C /tmp/image_mount
+          sudo umount /tmp/image_mount
 
       - uses: actions/upload-artifact@v4
         with:
