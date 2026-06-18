@@ -1,0 +1,16 @@
+name: Build Kernel
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt update && sudo apt install -y make gcc-aarch64-linux-gnu flex bison bc kmod
+      - run: cd linux && make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sm8150.config
+      - run: cd linux && make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs modules
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kernel-files
+          path: |
+            linux/arch/arm64/boot/Image
+            linux/arch/arm64/boot/dts/qcom/*raphael*.dtb
