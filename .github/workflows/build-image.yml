@@ -1,0 +1,26 @@
+name: Build ext4 Image
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Скачиваем уже собранный rootfs.tar.gz из артефактов (если он есть)
+      - uses: actions/download-artifact@v4
+        with:
+          name: rootfs
+          path: ./rootfs
+
+      # Или если rootfs.tar.gz лежит в репозитории — распакуем его
+      - run: |
+          mkdir -p image
+          dd if=/dev/zero of=image/arch-rootfs.img bs=1M count=4096
+          mkfs.ext4 image/arch-rootfs.img
+          mkdir -p /mnt/rootfs
+          sudo mount image/arch-rootfs.img /mnt/rootfs
+          sudo tar --numeric-owner -xzf ./rootfs/rootfs.tar.gz -C /mnt/rootfs
+          sudo umount /mnt/rootfs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: arch-rootfs-image
+          path: image/arch-rootfs.img
