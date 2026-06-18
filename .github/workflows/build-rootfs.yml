@@ -6,10 +6,10 @@ jobs:
     steps:
       - run: |
           mkdir rootfs
-          docker run --rm -v $PWD/rootfs:/rootfs archlinux bash -c "
+          docker run --rm -v $PWD/rootfs:/tmp/rootfs archlinux bash -c "
             pacman -Syu --noconfirm &&
             pacman -S base plasma-mobile mesa networkmanager --noconfirm &&
-            tar --exclude='/sys' --exclude='/proc' --exclude='/dev' --exclude='/run' -czf /rootfs/rootfs.tar.gz /
+            tar --exclude='/sys' --exclude='/proc' --exclude='/dev' --exclude='/run' -czf /tmp/rootfs/rootfs.tar.gz /
           "
       - uses: actions/upload-artifact@v4
         with:
