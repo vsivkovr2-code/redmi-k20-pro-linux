@@ -6,15 +6,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Установка Device Tree Compiler
       - run: sudo apt update && sudo apt install -y device-tree-compiler
 
-      # Создаём папку для готовых dtb
       - run: mkdir -p dtb_output
 
-      # Компиляция всех dts файлов в папке (укажите путь к вашим dts)
+      # Компилируем только файлы, содержащие "raphael" в имени
       - run: |
-          for dts in $(find . -name "*.dts" -not -path "./dtb_output/*"); do
+          for dts in $(find . -name "*raphael*.dts"); do
             echo "Компиляция $dts..."
             dtc -I dts -O dtb -o dtb_output/$(basename ${dts%.dts}.dtb) $dts
           done
