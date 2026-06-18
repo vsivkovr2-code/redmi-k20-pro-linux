@@ -4,6 +4,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install gdown
+        run: pip install gdown
+
       - name: Download rootfs.tar.gz from Google Drive
         run: |
           FILE_ID="1PbNtIB8LbDpo_CZTVpIjOmiOsyJiK72h"
