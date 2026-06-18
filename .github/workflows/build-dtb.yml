@@ -1,22 +1,13 @@
-name: Build DTB from DTS
+name: Build DTB for Raphael
 on: push
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - run: sudo apt update && sudo apt install -y device-tree-compiler
-
       - run: mkdir -p dtb_output
-
-      # Компилируем только файлы, содержащие "raphael" в имени
-      - run: |
-          for dts in $(find . -name "*raphael*.dts"); do
-            echo "Компиляция $dts..."
-            dtc -I dts -O dtb -o dtb_output/$(basename ${dts%.dts}.dtb) $dts
-          done
-
+      - run: dtc -I dts -O dtb -o dtb_output/sm8150-xiaomi-raphael.dtb sm8150-xiaomi-raphael.dts
       - uses: actions/upload-artifact@v4
         with:
           name: dtb-files
